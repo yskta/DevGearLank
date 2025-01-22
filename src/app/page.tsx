@@ -1,6 +1,24 @@
+'use client'
+import { useEffect, useState } from 'react'
+import { apiClient } from '@/lib/api-client'
 import Image from "next/image";
 
 export default function Home() {
+  const [health, setHealth] = useState<{status: string} | null>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        const result = await apiClient.health()
+        setHealth(result)
+      } catch (err) {
+        setError('Failed to check health')
+      }
+    }
+
+    checkHealth()
+  }, [])
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -48,6 +66,9 @@ export default function Home() {
             Read our docs
           </a>
         </div>
+        <h1>Health Check</h1>
+        {health && <p>Status: {health.status}</p>}
+        {error && <p className="text-red-500">{error}</p>}
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <a
