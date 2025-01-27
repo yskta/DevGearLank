@@ -14,6 +14,7 @@ export default function Home() {
         setHealth(result)
       } catch (err) {
         setError('Failed to check health')
+        console.error(err)
       }
     }
 
